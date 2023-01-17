@@ -1,0 +1,6 @@
+ide_c
+test
+*.xml
+*.old
+*.so
+*.dll
