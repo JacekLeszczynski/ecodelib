@@ -1,7 +1,11 @@
 #include "LibECode.c"
 
 int main() {
-    printf("Decimal point: %c\n", fDecimalPoint());
+    double d = fStringToDate("2023-01-19");
+    int r,m,d2;
+    printf("TDate = %f\n",d);
+    DecodeDate(d,&r,&m,&d2);
+    printf("rok=%i miesiąc=%i dzień=%i\n",r,m,d2);
     return 0;
 }
 

@@ -1,4 +1,5 @@
 /* BIBLIOTEKA: libecode_c */
+/* -lmcrypt */
 
 #include <locale.h>
 #include <stdlib.h>
@@ -216,6 +217,107 @@ double fMiliSecToTime(unsigned long aMiliSec) {
 
 unsigned long fMiliSecToInteger(unsigned long aMiliSec) {
   return fTimeToInteger(aMiliSec/1000/86400.0);
+}
+
+void DecodeDate(double Date, int* Year, int* Month, int* Day) {
+  unsigned int ly, ld, lm, j;
+  if (Date <= -693594) {
+    *Year = 0;
+    *Month = 0;
+    *Day = 0;
+  }
+  else {
+    if (Date > 0) {
+      Date = Date + 1.0 / (86400000 * 2);
+    }
+    else {
+      Date = Date - 1.0 / (86400000 * 2);
+    }
+    if (Date > 2958465.99999999) {
+      Date = 2958465.99999999;
+    }
+    j = (int)((int)(Date) + 693900) << 2;
+    j--;
+    ly = trunc(j / 146097);
+    j = j - 146097 * ly;
+    ld = j >> 2;
+    j = trunc(((ld << 2) + 3) / 1461);
+    ld = ((ld << 2) + 7 - 1461 * j) >> 2;
+    lm = trunc((5 * ld - 3) / 153);
+    ld = trunc((5 * ld + 2 - 153 * lm) / 5);
+    ly = 100 * ly + j;
+    if (lm < 10) {
+      lm += 3;
+    }
+    else {
+      lm -= 9;
+      ly++;
+    }
+    *Year = ly;
+    *Month = lm;
+    *Day = ld;
+  }
+}
+
+int MonthDays[2][12] = {
+  {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31},
+  {31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
+};
+
+bool IsLeapYear(unsigned int Year) {
+  return (Year % 4 == 0) && ((Year % 100 != 0) || (Year % 400 == 0));
+}
+
+bool EncodeDate(unsigned int Year, unsigned int Month, unsigned int Day, double* Date) {
+  unsigned int c, ya;
+  bool Result = (Year > 0) && (Year < 10000) &&
+                (Month >= 1 && Month <= 12) &&
+                (Day > 0) && (Day <= MonthDays[IsLeapYear(Year)][Month]);
+  if (Result) {
+    if (Month > 2) {
+      Month -= 3;
+    }
+    else {
+      Month += 9;
+      Year--;
+    }
+    c = Year / 100;
+    ya = Year - 100 * c;
+    *Date = ((146097 * c) >> 2) + ((1461 * ya) >> 2) + (153 * Month + 2) / 5 + Day;
+    *Date = *Date - 693900;
+  }
+  return Result;
+}
+
+double fStringToDate(char *str) {
+  int rok,miesiac,dzien;
+  char buf[5];
+  int i,len = strlen(str), licznik = 0, stat = 1;
+  double wynik;
+  bool b;
+  for (i = 0; i<len; i++) {
+    if (str[i] == '-') {
+      buf[licznik] = '\0';
+      if (stat == 1) {
+        rok = atoi(buf);
+      } else {
+        miesiac = atoi(buf);
+      }
+      licznik = 0;
+      stat++;
+      continue;
+    }
+    buf[licznik] = str[i];
+    licznik++;
+  }
+  buf[licznik] = '\0';
+  dzien = atoi(buf);
+  b = EncodeDate(rok,miesiac,dzien,&wynik);
+  if (b) {
+    return wynik;
+  } else {
+    return 0;
+  }
 }
 
 /* FUNKCJE SZYFRUJĄCE */
