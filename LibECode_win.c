@@ -1,4 +1,5 @@
-/* BIBLIOTEKA: libecode_c -lmcrypt -lcjson -lcurl -lcrypto -lssl */
+/* #BIBLIOTEKA_DLL:64: libecode64_c */
+/* #BIBLIOTEKA_DLL:32: libecode_c */
 
 #include <locale.h>
 #include <stdlib.h>
@@ -8,12 +9,12 @@
 #include <ctype.h>
 #include <math.h>
 #include <time.h>
-#include <cjson/cJSON.h>
-#include <curl/curl.h>
-#include <mcrypt.h>
-#include <openssl/sha.h>
-#include <openssl/bio.h>
-#include <openssl/evp.h>
+//#include <cjson/cJSON.h>
+//#include <curl/curl.h>
+//#include <mcrypt.h>
+//#include <openssl/sha.h>
+//#include <openssl/bio.h>
+//#include <openssl/evp.h>
 
 #define SHA_DIGEST_LENGTH 20
 #define BUFFER_SIZE 4096
@@ -197,7 +198,7 @@ unsigned long fTimeToInteger(double Time) {
 
 unsigned long fNowTimeToInteger()
 {
-  time_t czas = time(NULL);
+  /*time_t czas = time(NULL);
   struct timespec ts;
   timespec_get(&ts, TIME_UTC);
   int h, m, s, ms, a;
@@ -206,7 +207,7 @@ unsigned long fNowTimeToInteger()
   s = localtime(&czas)->tm_sec;
   ms = round(ts.tv_nsec/1000000);
   a = (h * 60 * 60 * 1000) + (m * 60 * 1000) + (s * 1000) + ms;
-  return a;
+  return a;*/ return 0;
 }
 
 double fIntegerToTime(unsigned long uczas) {
@@ -480,7 +481,7 @@ static size_t write_callback(char *ptr, size_t size, size_t nmemb, void *userdat
 
 // Funkcja pobierająca dane JSON z YouTube API
 int get_youtube_data(char *url, char **result) {
-    int error = 0;
+    /*int error = 0;
     CURL *curl;
     CURLcode res;
     struct youtube_data data = { "", 0 };
@@ -509,7 +510,7 @@ int get_youtube_data(char *url, char **result) {
 
     *result = malloc(strlen(data.buffer)+1);
     strcpy(*result,data.buffer);
-    return error;
+    return error;*/ return 0;
 }
 
 int fSetSizeMem(char **result, int size) {
@@ -519,7 +520,7 @@ int fSetSizeMem(char **result, int size) {
 }
 
 int fGetLiveChatId(char *video_id, char *api_key, char **result, int *len) {
-    char url[BUFFER_SIZE];
+    /*char url[BUFFER_SIZE];
     char *jsonString = NULL;
     char *activeLiveChatId,*message;
     int l1,l2;
@@ -623,12 +624,12 @@ int fGetLiveChatId(char *video_id, char *api_key, char **result, int *len) {
     strcpy(*result,activeLiveChatId);
 
     cJSON_Delete(json);
-    free(jsonString);
+    free(jsonString);*/
     return 0;
 }
 
 int fGetLiveChatAll(char *video_id, char *api_key, char **result, int *len) {
-    char url[BUFFER_SIZE];
+    /*char url[BUFFER_SIZE];
     char *jsonString = NULL;
     char *kind,*etag,*message;
     char *items_kind,*items_etag,*items_id,*scheduledStartTime,*activeLiveChatId;
@@ -794,12 +795,12 @@ int fGetLiveChatAll(char *video_id, char *api_key, char **result, int *len) {
 
     cJSON_Delete(json);
     free(jsonString);
-    *len = strlen(*result);
+    *len = strlen(*result);*/
     return 0;
 }
 
 int fGetLiveChatText(char *chat_id, char *api_key, char **aPageToken, int *aPageTokenLen, char **result, int *len, int *aPollingIntervalMillis) {
-    char url[BUFFER_SIZE];
+    /*char url[BUFFER_SIZE];
     char *jsonString = NULL,*message,*nextPageToken;
     int a,i,l,l1,l2,l3,pollingIntervalMillis,totalResults,resultsPerPage,licznik=0;
     cJSON *stringValue,*arrayValue,*x1,*x2,*json,*numberValue;
@@ -1025,34 +1026,35 @@ int fGetLiveChatText(char *chat_id, char *api_key, char **aPageToken, int *aPage
     cJSON_Delete(json);
     free(jsonString);
     return licznik;
+    */ return 0;
 }
 
 /* FUNKCJE SZYFRUJĄCE */
 
 int _encrypt(void* buffer, int buffer_len, char* IV, char* key, int key_len) {
-  MCRYPT td = mcrypt_module_open("rijndael-128", NULL, "cbc", NULL);
+  /*MCRYPT td = mcrypt_module_open("rijndael-128", NULL, "cbc", NULL);
   int blocksize = mcrypt_enc_get_block_size(td);
   if( buffer_len % blocksize != 0 ){return 1;}
   mcrypt_generic_init(td, key, key_len, IV);
   mcrypt_generic(td, buffer, buffer_len);
   mcrypt_generic_deinit (td);
-  mcrypt_module_close(td);
+  mcrypt_module_close(td);*/
   return 0;
 }
 
 int _decrypt(void* buffer, int buffer_len, char* IV, char* key, int key_len) {
-  MCRYPT td = mcrypt_module_open("rijndael-128", NULL, "cbc", NULL);
+  /*MCRYPT td = mcrypt_module_open("rijndael-128", NULL, "cbc", NULL);
   int blocksize = mcrypt_enc_get_block_size(td);
   if( buffer_len % blocksize != 0 ){return 1;}
   mcrypt_generic_init(td, key, key_len, IV);
   mdecrypt_generic(td, buffer, buffer_len);
   mcrypt_generic_deinit (td);
-  mcrypt_module_close(td);
+  mcrypt_module_close(td);*/
   return 0;
 }
 
 void _SHA1Hash(char *ALFA, unsigned char *hash) {
-    SHA1((const unsigned char*) ALFA, strlen(ALFA), hash);
+    //SHA1((const unsigned char*) ALFA, strlen(ALFA), hash);
 }
 
 char *_HashSHA1Create(char *text) {
@@ -1068,15 +1070,16 @@ char *_HashSHA1Create(char *text) {
 }
 
 char *fBase64EncodeBin(const char *bufor, int len) {
-    int encoded_len = EVP_ENCODE_LENGTH(len);
+    /*int encoded_len = EVP_ENCODE_LENGTH(len);
     char *encoded_text = (char*) malloc(encoded_len);
     memset(encoded_text,0,encoded_len);
     int encoded_len_actual = EVP_EncodeBlock((unsigned char*) encoded_text, (const unsigned char*) bufor, len);
-    return encoded_text;
+    return encoded_text;*/
+    return '\0';
 }
 
 int fBase64DecodeBin(const char *text, char **bufor) {
-    int len = strlen(text), pom = 0;
+    /*int len = strlen(text), pom = 0;
     if (text[len-1] == '=') pom++;
     if (text[len-2] == '=') pom++;
     int decoded_len = len*3/4;  // estymowana długość tekstu po dekodowaniu
@@ -1084,7 +1087,8 @@ int fBase64DecodeBin(const char *text, char **bufor) {
     *bufor = (char*) malloc(decoded_len);
     memset(*bufor, 0, decoded_len);
     int l = EVP_DecodeBlock((unsigned char*) *bufor, (const unsigned char*) text, len);
-    return l - pom;
+    return l - pom;*/
+    return 0;
 }
 
 int fCalcBuffer(int aLen)
@@ -1154,15 +1158,12 @@ int fDecryptStringOnlyPassword(char **buf, int len, char *key)
 
 char *fEncryptStr(char *text, char *key)
 {
-    char *res;
     int text_len = strlen(text);
     int buf_size = fCalcBuffer(text_len);
     char *buf = malloc(buf_size);
     strcpy(buf,text);
     int len = fEncryptStringOnlyPassword(&buf,text_len,key);
-    res = fBase64EncodeBin(buf,len);
-    free(buf);
-    return res;
+    return fBase64EncodeBin(buf,len);
 }
 
 char *fDecryptStr(char *text, char *key)

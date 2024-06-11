@@ -6,7 +6,7 @@
 #include <stdbool.h>
 #include <math.h>
 #include <sys/time.h>
-#include <mcrypt.h>
+//#include <mcrypt.h>
 #include <sys/stat.h>
 #include <unistd.h>
 #include <errno.h>
